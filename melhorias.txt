@@ -1,0 +1,8 @@
+1 - Criar uma instância auxiliar dos tamanhos de corte pedido;  V
+
+2 - pegar o maior e o menor item;
+	- enquanto existir perda maior que o menor item, o loop continua
+
+3 - criar uma string que armazena a solução
+
+4 - 

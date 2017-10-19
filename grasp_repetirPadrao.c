@@ -304,6 +304,7 @@ void escreverSolucao(Solucao *solucaoFinal,int itens, int compPadrao)
             andarilho = andarilho->proximo;
         }
         printf("}\n");
+        printf("Repeticoes: %d \n",solucaoFinal->repeticoes);
         printf("Perda: %d \n", solucaoFinal->perda);
         soma += solucaoFinal->perda;
         solucaoFinal = solucaoFinal->proximo;
@@ -446,7 +447,7 @@ int repetirPadrao(No *inventario, int *arrayDemanda, int *arrayPadraoDeCorte, in
               if(arrayPadraoDeCorte[andarilho->posicao])
               {
                 (arrayDemanda[andarilho->posicao])--;
-                (andarilho->damanda)--;
+                (andarilho->demanda)--;
               }
             }
             repeticoes++;

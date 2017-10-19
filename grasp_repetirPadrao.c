@@ -9,16 +9,6 @@ struct tipo_corte{
   struct tipo_corte *proximo;
 };
 typedef struct tipo_corte No;
-/*
-struct tipo_corte{
-  int tamanho;
-  int demanda;
-  struct tipo_corte *proximo;
-};
-typedef struct tipo_corte No;
-*/
-
-
 
 struct inicio{
   struct tipo_corte *inicio;
@@ -29,6 +19,8 @@ typedef struct inicio Corte;
 typedef struct solucao{
     Corte * solucaoIndividual;
     int * padraoDeCorte;
+    int * demandaResidual;
+    int repeticoes;
     int perda;
     struct solucao *proximo;
 } Solucao;
@@ -163,20 +155,6 @@ void ler( Corte *padrao, char documento[100] ){
   fclose( arquivo );
 }
 
-/*
-void ler( Corte *padrao, char documento[100] ){
-  FILE *arquivo;
-  int valor, demanda;
-  arquivo = fopen(documento, "r");
-  if( arquivo == NULL )
-    printf("Houve um erro ao abrir o arquivo!");
-  else{
-    while( fscanf(arquivo, "%d %d", &valor, &demanda) != EOF )
-      inserirNaLista( padrao, valor, demanda );
-  }
-  fclose( arquivo );
-}
-*/
 void imprimir( Corte *padrao ){
   No *atual;
   if( padrao != NULL ){
@@ -333,20 +311,6 @@ void escreverSolucao(Solucao *solucaoFinal,int itens, int compPadrao)
     
     printf("\nPerda de %d u.m. de %d u.m. de materia prima utilizada \n", soma, compPadrao*qtdeBarras);
 }
-int obterPosicao(No *andarilho, int compSelecionado)
-{
-    int i = 0;
-    while(andarilho != NULL)
-    {
-        if(andarilho->tamanho == compSelecionado)
-              return i;
-        i++;
-        andarilho=andarilho->proximo;
-    }
-
-    printf("Erro em obterPosicao()! Elemento selecionado nao existe no inventario\n");
-    exit(6);
-}
 void atualizarDemanda(No *andarilho,int tamanho, int demandaAtendida)
 {
     
@@ -453,6 +417,43 @@ float gerarAlpha(){
   }while( valor <= 0 || valor >= 1 );
   return valor;
 }
+int repetirPadrao(No *inventario, int *arrayDemanda, int *arrayPadraoDeCorte, int limite)
+{
+    int i, repetir = 1, repeticoes = 1;
+    No *andarilho = inventario;
+    //Copia as demandas não atendidas do inventário para o array de demandas não atendidads da solução
+    while(andarilho != NULL)
+    {
+        arrayDemanda[andarilho->posicao] = andarilho->demanda;
+        i++;
+        andarilho = andarilho->proximo;
+    }
+  
+    while(repetir)
+    {
+        //verifica se o padrao de corte ainda não atendeu a demanda ou seja repetir = 1
+        for(i=0;i<limite;i++)
+           if(arrayPadraoDeCorte[i] && arrayDemanda[i] == 0)
+              repetir = 0;
+      
+        //Se o padrao de corte pode ser repetido, percorre o inventário e atualiza as demandas
+        if(repetir)
+        {
+            andarilho = inventario;
+            while(andarilho != NULL)
+            {
+              //Se o corte foi aplicado na barra, então sua demanda será atualizada na solucao e no inventario
+              if(arrayPadraoDeCorte[andarilho->posicao])
+              {
+                (arrayDemanda[andarilho->posicao])--;
+                (andarilho->damanda)--;
+              }
+            }
+            repeticoes++;
+        }
+    }
+  return repeticoes;
+}
 
 void construcao(Corte *padrao, float alpha, int L)
 {
@@ -492,11 +493,11 @@ void construcao(Corte *padrao, float alpha, int L)
                 exit(-2);
         }
         temp->padraoDeCorte = (int *) malloc(sizeof(int) * padrao->quantidade);
+        temp->demandaResidual = (int *) malloc(sizeof(int) * padrao->quantidade);
   
         iniciarArray(temp->padraoDeCorte, padrao->quantidade);
   
-        temp->solucaoIndividual = iniciar();
-    
+        temp->solucaoIndividual = iniciar(); 
         menorPeca = menorComprimento(inventario->inicio);
     
         cortesPossiveis = criarInventario(inventario->inicio);
@@ -543,7 +544,8 @@ void construcao(Corte *padrao, float alpha, int L)
             escolhido = NULL;
             apagarLista(lrc);
         }
-        
+      
+        temp->repeticoes = repetirPadrao(inventario->inicio, temp->demandaResidual, temp->padraoDeCorte, padrao->quantidade); 
         qtdeBarras++;
         temp->perda = perda;
         temp->proximo = NULL;
@@ -571,13 +573,7 @@ int main(){
     scanf("%s", arquivo);
     
     ler(padrao, arquivo);
-    //imprimir(padrao);
   
-
-    //printf("Digite o alpha: ");
-    //scanf("%f", &alpha);
-    
-
     GRASP( padrao, gerarAlpha(), 100 );
   
 

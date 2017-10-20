@@ -312,7 +312,7 @@ void escreverSolucao(Solucao *solucaoFinal,int itens, int compPadrao)
     
     printf("\nPerda de %d u.m. de %d u.m. de materia prima utilizada \n", soma, compPadrao*qtdeBarras);
 }
-void atualizarDemanda(No *andarilho,int tamanho, int demandaAtendida)
+void atualizarDemanda(No *andarilho,int tamanho, int demandaAtendida, int *arrayDemanda)
 {
     
     while(andarilho != NULL)
@@ -320,6 +320,7 @@ void atualizarDemanda(No *andarilho,int tamanho, int demandaAtendida)
             if(andarilho->tamanho == tamanho)
             {
                andarilho->demanda -=demandaAtendida;
+               arrayDemanda[andarilho->posicao] = andarilho->demanda;
                return;
             }
             
@@ -422,14 +423,7 @@ int repetirPadrao(No *inventario, int *arrayDemanda, int *arrayPadraoDeCorte, in
 {
     int i, repetir = 1, repeticoes = 1;
     No *andarilho = inventario;
-    //Copia as demandas não atendidas do inventário para o array de demandas não atendidads da solução
-    while(andarilho != NULL)
-    {
-        arrayDemanda[andarilho->posicao] = andarilho->demanda;
-        i++;
-        andarilho = andarilho->proximo;
-    }
-  
+    
     while(repetir)
     {
         //verifica se o padrao de corte ainda não atendeu a demanda ou seja repetir = 1
@@ -440,7 +434,7 @@ int repetirPadrao(No *inventario, int *arrayDemanda, int *arrayPadraoDeCorte, in
         //Se o padrao de corte pode ser repetido, percorre o inventário e atualiza as demandas
         if(repetir)
         {
-            andarilho = inventario;
+            andarilho = inventario
             while(andarilho != NULL)
             {
               //Se o corte foi aplicado na barra, então sua demanda será atualizada na solucao e no inventario
@@ -497,11 +491,13 @@ void construcao(Corte *padrao, float alpha, int L)
         temp->demandaResidual = (int *) malloc(sizeof(int) * padrao->quantidade);
   
         iniciarArray(temp->padraoDeCorte, padrao->quantidade);
-  
+        iniciarArray(temp->demandaResidual, padrao->quantidade);
+      
         temp->solucaoIndividual = iniciar(); 
         menorPeca = menorComprimento(inventario->inicio);
     
         cortesPossiveis = criarInventario(inventario->inicio);
+      
         while(cortesPossiveis->inicio != NULL && perda >= menorPeca && menorPeca != 0)
         {
             //Define a peca de maior comprimento de acordo com a perda
@@ -533,7 +529,7 @@ void construcao(Corte *padrao, float alpha, int L)
                 
                 inserirNaListaExtend(temp->solucaoIndividual, escolhido->tamanho, escolhido->posicao, repeticoes);
                 //Atualiza a demanda do item escolhido no inventario
-                atualizarDemanda(inventario->inicio, escolhido->tamanho, repeticoes);
+                atualizarDemanda(inventario->inicio, escolhido->tamanho, repeticoes, temp->demandaResidual);
                 //Descarta o produto escolhido do restante da barra a ser cortada
                 apagarElemento(cortesPossiveis,escolhido);
             }

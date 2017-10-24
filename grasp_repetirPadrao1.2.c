@@ -434,7 +434,7 @@ int repetirPadrao(No *inventario, int *arrayDemanda, int *arrayPadraoDeCorte, in
         //Se o padrao de corte pode ser repetido, percorre o inventário e atualiza as demandas
         if(repetir)
         {
-            andarilho = inventario
+            andarilho = inventario;
             while(andarilho != NULL)
             {
               //Se o corte foi aplicado na barra, então sua demanda será atualizada na solucao e no inventario

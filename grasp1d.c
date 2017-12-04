@@ -443,6 +443,7 @@ int repetirPadrao(No *inventario, int *arrayDemanda, int *arrayPadraoDeCorte, in
                 (arrayDemanda[andarilho->posicao])--;
                 (andarilho->demanda)--;
               }
+               andarilho = andarilho->proximo;
             }
             repeticoes++;
         }

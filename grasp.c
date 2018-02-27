@@ -24,7 +24,7 @@ void GRASP(ListaDePecasObtidas *padrao, int repeticoes, int L){
       printf("Alpha (%.2f): \n", alpha);
       for(j = 0; j<repeticoes; j++) {
         solucoesPorAlpha[(int)((alpha*10)-1)][j] = construcao(padrao, alpha, L);
-        melhoria( solucoesPorAlpha[(int)((alpha*10)-1)][j]->inicio, solucoesPorAlpha[(int)((alpha*10)-1)][j]->perda, solucoesPorAlpha[(int)((alpha*10)-1)][j]->barrasUtilizadas );
+        melhoria( solucoesPorAlpha[(int)((alpha*10)-1)][j]->inicio, solucoesPorAlpha[(int)((alpha*10)-1)][j]->perda, solucoesPorAlpha[(int)((alpha*10)-1)][j]->barrasUtilizadas, padrao->quantidade );
         escreverSolucaoTexto( "saida.txt", solucoesPorAlpha[(int)((alpha*10))-1][j]->inicio, padrao->quantidade, L, alpha, solucoesPorAlpha[(int)((alpha*10))-1][j]->perda);
       }
 

@@ -1,5 +1,5 @@
 /*
-    -Atualiza a demanda dos elementos da lista encadeada de peças
+    -Atualiza, no invetário, a demanda da peca cortada 
     -atualiza cada valor do vetor "arrayDemanda"
 */
 #include <stdio.h>

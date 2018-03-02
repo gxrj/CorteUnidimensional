@@ -1,30 +1,47 @@
 struct tipo_peca{
+
   int tamanho;
   int demanda;
   int posicao;
   struct tipo_peca *proximo;
+
 };  typedef struct tipo_peca Peca;
 
 struct inicio{
+
   struct tipo_peca *inicio;
   int quantidade;
+
 };  typedef struct inicio ListaDePecasObtidas;
 
 typedef struct solucao{
+
     ListaDePecasObtidas * pecasObtidas;
     int * vetorPadraoDeCorte;
     int * vetorDemandaResidual;
     int repeticoes;
     int perdaIndividual;
     struct solucao *proximo;
+
 } EsquemaDeCorte;
 
 typedef struct{
+
   int barrasUtilizadas;
   int perda;
   float alpha;
   EsquemaDeCorte *inicio;
+
 }listaSolucao;
+
+typedef struct{
+
+    int qtdePecas;
+    int *vetorPecaTamanho;
+    int *vetorPecaDemanda;
+    int *vetorPecaPosicao;
+
+} inventarioDePecas;
 
 ListaDePecasObtidas* iniciar(void);
 void apagarLista( ListaDePecasObtidas * );
@@ -46,7 +63,7 @@ void atualizarInventario(ListaDePecasObtidas  *);
 int repetirPadrao(Peca *, int *, int *, int );
 listaSolucao * construcao(ListaDePecasObtidas  *, float , int );
 listaSolucao * obterMelhores(listaSolucao *[], int );
-void melhoria( EsquemaDeCorte *, int, int, int);
+void melhoria( EsquemaDeCorte *, int, int, int, float);
 void obterEsquemas(EsquemaDeCorte *, EsquemaDeCorte *, EsquemaDeCorte *, EsquemaDeCorte *, EsquemaDeCorte *, int);
 EsquemaDeCorte * copiarEsquema( EsquemaDeCorte *, int);
 void copiarArray(int *, int *, int);

@@ -1,5 +1,6 @@
 /*
     -Copia os valores da estrutura "padrao" para a estrutura "inventario" através da função criarInventario()
+    -instancia uma lista de solucaoes "lista" para ser retornada no fim do programa
 
     Enquanto o inventario não estiver vazio: 
         -instacia um novo esquema de corte "temp", 
@@ -21,10 +22,12 @@
 
         -Após o fim do loop interno, verifica se o padrao de corte recém gerado pode ser repetido
         -atualiza as repetições do esquema de corte e perda
-        -concatena os valores
+        -concatena os valores obtidos na lista de soluções "lista"
         -Atualiza os valores e retoma ao loop externo até que sua condição não seja satisfeita
 
     -Após o fim do loop externo, incrementa a quantidade de barras utilizadas na solução 
+    
+    -retorna a lista de solucoes "lista"
 
 */
 #include <stdio.h>
@@ -111,7 +114,7 @@ listaSolucao * construcao(ListaDePecasObtidas *padrao, float alpha, int L)
                 inserirNaLista(temp->pecasObtidas, escolhido->tamanho, escolhido->posicao, repeticoes);
                 //Incrementa a quantidade de pecas geradas com o corte 
                 temp->pecasObtidas->quantidade += repeticoes;
-                //Atualiza a demanda do item escolhido no inventario
+                //Atualiza a demanda do item escolhido no inventario e no esquema de corte
                 atualizarDemanda(inventario->inicio, escolhido->tamanho, repeticoes, temp->vetorDemandaResidual);
                 //Descarta o produto escolhido do restante da barra a ser cortada
                 apagarPeca(cortesPossiveis,escolhido);
